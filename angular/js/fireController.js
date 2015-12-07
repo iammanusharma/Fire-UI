@@ -7,8 +7,14 @@
         //controllers manage an object $scope in AngularJS (this is the view model)
         //myApp.controller('FireController', function ($scope) {
 
-        var z = FireService.getUser('a').then(function (result) {
-            console.log(result);
+        var z = FireService.getNodes().then(function (result) {
+            $scope.nodeList = result;
+			angular.forEach($scope.nodeList, function(node) {
+				  $scope.addModuleToLibrary(node.id, node.id,
+                        $scope.library_topleft.x + $scope.library_topleft.margin,
+                        $scope.library_topleft.y + $scope.library_topleft.margin + $scope.library_topleft.item_height);
+				  $scope.library_topleft.item_height = $scope.library_topleft.item_height + 50;
+				});
         });
          
             // define a module with library id, schema id, etc.
@@ -56,12 +62,19 @@
                 jsPlumb.detachEveryConnection();
                 $scope.schema = [];
                 $scope.library = [];
-                $scope.addModuleToLibrary("CSV", "This is CSV Node",
-                        $scope.library_topleft.x + $scope.library_topleft.margin,
-                        $scope.library_topleft.y + $scope.library_topleft.margin);
-                $scope.addModuleToLibrary("Kmeans", "This is Kmeans Node",
+				angular.forEach($scope.nodeList, function(node) {
+				  $scope.addModuleToLibrary(node.id, node.id,
                         $scope.library_topleft.x + $scope.library_topleft.margin,
                         $scope.library_topleft.y + $scope.library_topleft.margin + $scope.library_topleft.item_height);
+				  $scope.library_topleft.item_height = $scope.library_topleft.item_height + 50;
+				});
+
+            //    $scope.addModuleToLibrary("CSV", "This is CSV Node",
+             //           $scope.library_topleft.x + $scope.library_topleft.margin,
+             //           $scope.library_topleft.y + $scope.library_topleft.margin);
+             //   $scope.addModuleToLibrary("Kmeans", "This is Kmeans Node",
+              //          $scope.library_topleft.x + $scope.library_topleft.margin,
+              //          $scope.library_topleft.y + $scope.library_topleft.margin + $scope.library_topleft.item_height);
             };
 
             // add a module to the library
@@ -87,7 +100,12 @@
                 }
                 var m = new module(library_id, schema_id, title, description, posX, posY);
                 $scope.schema.push(m);
+				console.log('schema'+$scope.schema);
             };
+
+			$scope.saveWorkflow = function(){
+			
+			};
 
             $scope.removeState = function (schema_id) {
                 console.log("Remove state " + schema_id + " in array of length " + $scope.schema.length);

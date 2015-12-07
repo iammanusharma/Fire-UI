@@ -3,10 +3,10 @@
      
         var FireService = function ($http,$q) {
              
-            var getUser = function (username) {
+            var getNodes = function () {
                 var deferred = $q.defer();
 
-                $http.get("https://api.github.com/users/" + username)
+                $http.get("http://localhost:8080/nodeList")
                     .then(function (result) {
                         //success
                         deferred.resolve(result.data);
@@ -20,7 +20,7 @@
             };
 
             return {
-                getUser: getUser,
+                getNodes: getNodes,
             };
 
         };
