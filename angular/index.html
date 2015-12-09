@@ -32,7 +32,7 @@
 		<!--<img src="../common/img/raspberry_pi.png" alt="Raspberry PI device" width="250" height="150" align="left">-->
 		<div class="verticalLine"></div>
 		<!--<img src="../common/img/android.jpg" alt="Android Nexus device" width="240" height="150" align="left">-->
-		<div plumb-item class="item" ng-repeat="module in schema" ng-style="{ 'left':module.x, 'top':module.y }"
+		<div id="{{module.title}}" plumb-item class="item" ng-repeat="module in schema" ng-style="{ 'left':module.x, 'top':module.y }"
 			data-identifier="{{module.schema_id}}">
 			<div class="title">{{module.title}}</div>
 			{{module.description}}

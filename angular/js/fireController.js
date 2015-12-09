@@ -6,9 +6,13 @@
 
         //controllers manage an object $scope in AngularJS (this is the view model)
         //myApp.controller('FireController', function ($scope) {
-
+        $scope.edges = [];
         var z = FireService.getNodes().then(function (result) {
             $scope.nodeList = result;
+            $scope.nodeList = [];
+            //$scope.nodeList.push([{ "id": "KMCSVeans", "type": null, "fields": [{ "name": "csv.directory", "value": "" }, { "name": "csv.delimiter", "value": "" }], "class_": "fire.nodes.dataset.NodeDatasetFileOrDirectoryCSV" }, { "id": "KMeans", "type": null, "fields": [{ "name": "kmeans.num_clusters", "value": "" }, { "name": "kmeans.max_iter", "value": "" }], "class_": "fire.nodes.ml.NodeKMeans" }]);
+            $scope.nodeList.push({ "id": "csv" });
+            $scope.nodeList.push({ "id": "kmeans" });
             $scope.library_topleft = angular.copy($scope.library_topleftNodes);
 			angular.forEach($scope.nodeList, function(node) {
 				  $scope.addModuleToLibrary(node.id, node.id,
@@ -97,8 +101,13 @@
 				console.log('schema'+$scope.schema);
             };
 
-			$scope.saveWorkflow = function(){
-			
+            $scope.saveWorkflow = function () {
+                $scope.workflow = [];
+                $scope.workflow.push($scope.schema);
+                $scope.workflow.push($scope.edges);
+                FireService.saveWorkflow($scope.workflow).then(function (result) {
+                    alert("success");
+                });			
 			};
 
             $scope.removeState = function (schema_id) {
@@ -117,6 +126,7 @@
                     console.log("Set up jsPlumb listeners (should be only done once)");
                     jsPlumb.bind("connection", function (info) {
                         $scope.$apply(function () {
+                            $scope.edges.push({ "source": info.sourceId,"target":info.targetId });
                             console.log("Possibility to push connection into array");
                         });
                     });
