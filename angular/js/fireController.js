@@ -9,6 +9,7 @@
 
         var z = FireService.getNodes().then(function (result) {
             $scope.nodeList = result;
+            $scope.library_topleft = angular.copy($scope.library_topleftNodes);
 			angular.forEach($scope.nodeList, function(node) {
 				  $scope.addModuleToLibrary(node.id, node.id,
                         $scope.library_topleft.x + $scope.library_topleft.margin,
@@ -40,21 +41,19 @@
             $scope.schema_uuid = 0;
 
             // todo: find out how to go back and forth between css and angular
-            $scope.library_topleft = {
+            $scope.library_topleftNodes = {
                 x: 15,
                 y: 145,
-                item_height: 50,
+                item_height: 0,
                 margin: 5,
             };
+
+            $scope.library_topleft = $scope.library_topleftNodes;
+
 
             $scope.module_css = {
                 width: 150,
                 height: 100, // actually variable
-            };
-
-            getNodeList();
-            function getNodeList() {
-                //Get the nodes from the service layer and bind it to the UI
             };
 
             $scope.redraw = function () {
@@ -62,6 +61,7 @@
                 jsPlumb.detachEveryConnection();
                 $scope.schema = [];
                 $scope.library = [];
+                $scope.library_topleft = angular.copy($scope.library_topleftNodes);
 				angular.forEach($scope.nodeList, function(node) {
 				  $scope.addModuleToLibrary(node.id, node.id,
                         $scope.library_topleft.x + $scope.library_topleft.margin,
@@ -69,13 +69,7 @@
 				  $scope.library_topleft.item_height = $scope.library_topleft.item_height + 50;
 				});
 
-            //    $scope.addModuleToLibrary("CSV", "This is CSV Node",
-             //           $scope.library_topleft.x + $scope.library_topleft.margin,
-             //           $scope.library_topleft.y + $scope.library_topleft.margin);
-             //   $scope.addModuleToLibrary("Kmeans", "This is Kmeans Node",
-              //          $scope.library_topleft.x + $scope.library_topleft.margin,
-              //          $scope.library_topleft.y + $scope.library_topleft.margin + $scope.library_topleft.item_height);
-            };
+           };
 
             // add a module to the library
             $scope.addModuleToLibrary = function (title, description, posX, posY) {
@@ -160,6 +154,7 @@
                 jsPlumb.makeTarget(element, {
                     anchor: 'Continuous',
                     maxConnections: 2,
+                    endpoint:["Dot", {radius: 1}],
                 });
                 jsPlumb.draggable(element, {
                     containment: 'parent'
@@ -207,13 +202,22 @@
 
                 jsPlumb.makeSource(element, {
                     parent: $(element).parent(),
-                    //				anchor: 'Continuous',
+                    anchor: 'Continuous',
                     paintStyle: {
-                        strokeStyle: "#225588",
-                        fillStyle: "transparent",
-                        radius: 7,
-                        lineWidth: 2
+                      strokeStyle: "#1e8151", lineWidth: 1, 
+                      strokeWidth: 3
                     },
+                    endpoint:["Dot", {radius: 1}],
+
+                    connectorOverlays: [
+                      [ "Arrow", {
+                          location: 1,
+                          id: "arrow",
+                          length: 14,
+                          foldback: 0.8
+                      } ]
+                   ] 
+
                 });
             }
         };
