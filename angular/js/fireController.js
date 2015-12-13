@@ -1,8 +1,8 @@
 (function () {
 
-    var myApp = angular.module('FireApp',[]);
+    var myApp = angular.module('FireApp', [ 'ui.bootstrap']);
 
-    var FireController = function ($scope, $interval, $location, FireService) {
+    var FireController = function ($scope, $interval, $location, FireService, $uibModal) {
 
         //controllers manage an object $scope in AngularJS (this is the view model)
         //myApp.controller('FireController', function ($scope) {
@@ -11,11 +11,11 @@
             $scope.nodeList = result;
             $scope.nodeList = [];
             //$scope.nodeList.push([{ "id": "KMCSVeans", "type": null, "fields": [{ "name": "csv.directory", "value": "" }, { "name": "csv.delimiter", "value": "" }], "class_": "fire.nodes.dataset.NodeDatasetFileOrDirectoryCSV" }, { "id": "KMeans", "type": null, "fields": [{ "name": "kmeans.num_clusters", "value": "" }, { "name": "kmeans.max_iter", "value": "" }], "class_": "fire.nodes.ml.NodeKMeans" }]);
-            $scope.nodeList.push({ "id": "csv" });
-            $scope.nodeList.push({ "id": "kmeans" });
+            $scope.nodeList.push({ "id": "csv", "fields": [{ "name": "csv.directory", "value": "","type":"textbox" }, { "name": "csv.delimiter", "value": "" ,"type":"textbox"}] });
+            $scope.nodeList.push({ "id": "Kmeans", "fields": [{ "name": "Kmeans textbox1", "value": "123", "type": "textbox" }, { "name": "textbox 2", "value": "", "type": "textbox" }] });
             $scope.library_topleft = angular.copy($scope.library_topleftNodes);
 			angular.forEach($scope.nodeList, function(node) {
-				  $scope.addModuleToLibrary(node.id, node.id,
+				  $scope.addModuleToLibrary(node.id, node.fields,
                         $scope.library_topleft.x + $scope.library_topleft.margin,
                         $scope.library_topleft.y + $scope.library_topleft.margin + $scope.library_topleft.item_height);
 				  $scope.library_topleft.item_height = $scope.library_topleft.item_height + 50;
@@ -23,11 +23,11 @@
         });
          
             // define a module with library id, schema id, etc.
-            function module(library_id, schema_id, title, description, x, y) {
+            function module(library_id, schema_id, title, fields, x, y) {
                 this.library_id = library_id;
                 this.schema_id = schema_id;
                 this.title = title;
-                this.description = description;
+                this.fields = fields;
                 this.x = x;
                 this.y = y;
             }
@@ -67,7 +67,7 @@
                 $scope.library = [];
                 $scope.library_topleft = angular.copy($scope.library_topleftNodes);
 				angular.forEach($scope.nodeList, function(node) {
-				  $scope.addModuleToLibrary(node.id, node.id,
+				  $scope.addModuleToLibrary(node.id, node.fields,
                         $scope.library_topleft.x + $scope.library_topleft.margin,
                         $scope.library_topleft.y + $scope.library_topleft.margin + $scope.library_topleft.item_height);
 				  $scope.library_topleft.item_height = $scope.library_topleft.item_height + 50;
@@ -76,11 +76,11 @@
            };
 
             // add a module to the library
-            $scope.addModuleToLibrary = function (title, description, posX, posY) {
+            $scope.addModuleToLibrary = function (title, fields, posX, posY) {
                 console.log("Add module " + title + " to library, at position " + posX + "," + posY);
                 var library_id = $scope.library_uuid++;
                 var schema_id = -1;
-                var m = new module(library_id, schema_id, title, description, posX, posY);
+                var m = new module(library_id, schema_id, title, fields, posX, posY);
                 $scope.library.push(m);
             };
 
@@ -89,14 +89,14 @@
                 console.log("Add module " + title + " to schema, at position " + posX + "," + posY);
                 var schema_id = $scope.schema_uuid++;
                 var title = "Unknown";
-                var description = "Likewise unknown";
+                var fields =[];
                 for (var i = 0; i < $scope.library.length; i++) {
                     if ($scope.library[i].library_id == library_id) {
                         title = $scope.library[i].title;
-                        description = $scope.library[i].description;
+                        fields = $scope.library[i].fields;
                     }
                 }
-                var m = new module(library_id, schema_id, title, description, posX, posY);
+                var m = new module(library_id, schema_id, title, fields, posX, posY);
                 $scope.schema.push(m);
 				console.log('schema'+$scope.schema);
             };
@@ -132,9 +132,63 @@
                     });
                 });
             }
-        //});
+
+        //Modal Popup Start
+            $scope.animationsEnabled = true;
+            $scope.editSchema = function (id) {
+
+                $scope.modelNode = [];
+                for (var i = 0; i < $scope.schema.length; i++) {
+                    if ($scope.schema[i].title == id) {
+                        $scope.modelNode.title = id;
+                        $scope.modelNode.fields = $scope.schema[i].fields;
+                    }
+                }
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'myModalContent.html',
+                    controller: 'ModalInstanceCtrl',
+                    size: 'sm'
+                    ,
+                    resolve: {
+                        items: function () {
+                            return $scope.modelNode;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (selectedItem) {
+                    $scope.selected = selectedItem;
+                }, function () {
+                    //$log.info('Modal dismissed at: ' + new Date());
+                });
+            };
+
+            $scope.toggleAnimation = function () {
+                $scope.animationsEnabled = !$scope.animationsEnabled;
+            };
+
+        //Modal Popup END
 
     };
+
+   //Modal Popup helper
+    myApp.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
+
+        $scope.modelNode = items;
+        //$scope.selected = {
+        //    item: $scope.items[0]
+        //};
+
+        $scope.ok = function () {
+            $uibModalInstance.close($scope.modelNode);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    });
 
     myApp.controller("FireController", FireController);
 
@@ -172,13 +226,8 @@
 
                 // this should actually done by a AngularJS template and subsequently a controller attached to the dbl-click event
                 element.bind('dblclick', function (e) {
-                    jsPlumb.detachAllConnections($(this));
-                    $(this).remove();
-                    // stop event propagation, so it does not directly generate a new state
-                    e.stopPropagation();
-                    //we need the scope of the parent, here assuming <plumb-item> is part of the <plumbApp>			
-                    scope.$parent.removeState(attrs.identifier);
-                    scope.$parent.$digest();
+                    //Call method to edit schema from the parent controller.
+                    scope.$parent.editSchema(this.id);
                 });
 
             }
