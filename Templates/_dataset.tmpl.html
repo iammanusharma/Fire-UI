@@ -1,0 +1,31 @@
+﻿<div>
+    <div>
+        <h2>DataSets</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Path</th>
+                    <th>View</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="dataset in datasets">
+                    <td><span>{{dataset.id}}</span></td>
+                    <td><span>{{dataset.name}}</span></td>
+                    <td><span>{{dataset.description}}</span></td>
+                    <td><span>{{dataset.path}}</span></td>
+                    <td style="cursor: pointer; text-decoration: underline"><a data-ng-href="#/datasetView/{{dataset.id}}/view">View</a></td>
+                    <td style="cursor: pointer; text-decoration: underline"><a data-ng-href="#/datasetView/{{dataset.id}}/edit">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+

@@ -1,0 +1,87 @@
+﻿<div   >
+    <!--/*/ <th:block th:include="fragments/headermenu :: header"></th:block> /*/-->
+
+    <h2>DataSet Details</h2>
+    <div>
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Id:</label>
+                <div class="col-sm-10">
+                    <span class="form-control-static"><span>{{selectedDataset.id}}</span></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Name:</label>
+                <span ng-hide="isEdit">{{selectedDataset.name}}</span>
+                <div ng-show="isEdit" class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="selectedDataset.name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Description:</label>
+                <span ng-hide="isEdit">{{selectedDataset.description}}</span>
+                <div ng-show="isEdit" class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="selectedDataset.description" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Path:</label>
+                <span ng-hide="isEdit">{{selectedDataset.path}}</span>
+                <div ng-show="isEdit" class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="selectedDataset.path" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Schema:</label>
+                <div class="col-sm-10">
+                    <table style="float: none; table-layout: auto; overflow-wrap: break-word; word-wrap: break-word;" class="table result-table-bordered result-table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>ML Type</th>
+                                <th>Text1</th>
+                                <th>Text2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="height: 20px; padding: 0;" ng-repeat="schemaColumn in selectedDataset.schema" data-ng-show="selectedDataset.schema.length">
+                                <td>
+                                    <span data-ng-hide="isEdit">{{ schemaColumn.name }}</span>
+                                    <input data-ng-show="isEdit" type="text" placeholder="Quantity" id="Number1" name="name" data-ng-change="changeQuantity(schemaColumn)" data-ng-model="schemaColumn.name" data-ng-trim="true" style="width: 70%; height: auto" />
+                                </td>
+                                <td>
+                                    <span data-ng-hide="isEdit">{{ schemaColumn.type }}</span>
+                                    <input data-ng-show="isEdit" type="text" id="Number2" name="type" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.type" data-ng-trim="true" style="width: auto; height: auto" />
+                                </td>
+                                <td>
+                                    <span data-ng-hide="isEdit">{{ schemaColumn.MLType }}</span>
+                                    <input data-ng-show="isEdit" type="text" id="Number3" name="MLType" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.MLType" data-ng-trim="true" style="width: auto; height: auto" />
+                                </td>
+                                <td>
+                                    <span data-ng-hide="isEdit">{{ schemaColumn.first }}</span>
+                                    <input data-ng-show="isEdit" type="text" id="Number4" name="first" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.first" data-ng-trim="true" style="width: auto; height: auto" />
+                                </td>
+                                <td>
+                                    <span data-ng-hide="isEdit">{{ schemaColumn.second }}</span>
+                                    <input data-ng-show="isEdit" type="text" id="Number5" name="second" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.second" data-ng-trim="true" style="width: auto; height: auto" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" data-ng-hide="selectedDataset.schema.length">No schema to display.</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <button ng-show="isEdit" type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default"><a data-ng-href="#/dataset">Back</a></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
