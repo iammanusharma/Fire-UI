@@ -49,15 +49,27 @@
                             <tr style="height: 20px; padding: 0;" ng-repeat="schemaColumn in selectedDataset.schema" data-ng-show="selectedDataset.schema.length">
                                 <td>
                                     <span data-ng-hide="isEdit">{{ schemaColumn.name }}</span>
-                                    <input data-ng-show="isEdit" type="text" placeholder="Quantity" id="Number1" name="name" data-ng-change="changeQuantity(schemaColumn)" data-ng-model="schemaColumn.name" data-ng-trim="true" style="width: 70%; height: auto" />
+                                    <input data-ng-show="isEdit" type="text" placeholder="name" id="Number1" name="name" data-ng-change="changeQuantity(schemaColumn)" data-ng-model="schemaColumn.name" data-ng-trim="true" style="width: 70%; height: auto" />
+                          
                                 </td>
                                 <td>
                                     <span data-ng-hide="isEdit">{{ schemaColumn.type }}</span>
-                                    <input data-ng-show="isEdit" type="text" id="Number2" name="type" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.type" data-ng-trim="true" style="width: auto; height: auto" />
+                                   <!-- <input data-ng-show="isEdit" type="text" id="Number2" name="type" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.type" data-ng-trim="true" style="width: auto; height: auto" />-->
+                                    <select data-ng-show="isEdit" class="form-control" ng-change="" id="typeList"   ng-model="schemaColumn.type">
+                                        <option value="int">int</option>  
+                                        <option value="double">double</option>
+                                        <option value="string">string</option>
+                                    </select>
                                 </td>
                                 <td>
                                     <span data-ng-hide="isEdit">{{ schemaColumn.MLType }}</span>
-                                    <input data-ng-show="isEdit" type="text" id="Number3" name="MLType" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.MLType" data-ng-trim="true" style="width: auto; height: auto" />
+                                   <!-- <input data-ng-show="isEdit" type="text" id="Number3" name="MLType" data-ng-change="validate(schemaColumn)" data-ng-model="schemaColumn.MLType" data-ng-trim="true" style="width: auto; height: auto" />-->
+                                    <select data-ng-show="isEdit" class="form-control" ng-model="schemaColumn.MLType" ng-change="" id="typeList">
+                                        <!--<option value="">---Please select---</option>--> <!-- not selected / blank option -->
+                                        <option value="0">Numeric</option>
+                                        <option value="1">Text</option>
+                                        <option value="2">Categorical</option>
+                                    </select>
                                 </td>
                                 <td>
                                     <span data-ng-hide="isEdit">{{ schemaColumn.first }}</span>
