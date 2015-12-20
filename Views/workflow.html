@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
 
-   
+
     <!--<script type="text/javascript" src="../common/js/jquery-1.9.0-min.js"></script>
     <script type="text/javascript" src="../common/js/jquery-ui-1.9.2-min.js"></script>
     <script type="text/javascript" src="../common/js/jquery.jsPlumb-1.4.1-all-min.js"></script>
@@ -12,10 +12,11 @@
     <script type="text/javascript" src="js/fireService.js"></script>
     <script src="../common/js/bootstrap.js"></script>-->
     <!--JS Library-->
-    <script src="../Scripts/library/angular.js"></script>
+
     <script src="../Scripts/library/jquery-1.9.0-min.js"></script>
     <script src="../Scripts/library/jquery-ui-1.9.2-min.js"></script>
     <script src="../Scripts/library/jquery.jsPlumb-1.4.1-all-min.js"></script>
+    <script src="../Scripts/library/angular.js"></script>
     <!--<script src="../Scripts/library/jsPlumb-2.0.4.js"></script>-->
     <script src="../Scripts/library/ui-bootstrap-tpls-0.14.3.js"></script>
     <!-- js files -->
@@ -31,53 +32,29 @@
 
 <body ng-app="FireApp">
     <div ng-controller="FireController">
-        <h1>FIRE</h1>
+        <!--/*/ <th:block th:include="fragments/headermenu :: header"></th:block> /*/-->
 
         <div id="container" class="drop-container" ng-click="addEvent($event)" droppable>
             <div id="menu-container">
-                <div plumb-menu-item class="menu-item" ng-repeat="module in library" ng-style="{ 'left':module.x, 'top':module.y }"
-                     data-identifier="{{module.library_id}}" draggable>
-                    <div class="summary">{{module.title}}</div>
+                <div align="center">
+                    <label>WorkFlow Name: </label>
+                    <input id="workflowname" ng-model="workflowname" type="text" maxlength="128" />
+                </div>
+                <div plumb-menu-item class="menu-item" ng-repeat="node in library" ng-style="{ 'left':node.x, 'top':node.y }"
+                     data-identifier="{{node.library_id}}" draggable>
+                    <div class="summary">{{node.id}}</div>
                 </div>
             </div>
-            <div class="verticalLine"></div>
-            <div class="verticalLine"></div>
-            <div id="{{module.title}}" plumb-item class="item" ng-repeat="module in schema" ng-style="{ 'left':module.x, 'top':module.y }"
-                 data-identifier="{{module.schema_id}}">
-                <div class="title">{{module.title}}</div>
-                {{module.description}}
+
+            <div id="{{node.module_id}}" plumb-item class="item" ng-repeat="node in module" ng-style="{ 'left':node.x, 'top':node.y }"
+                 data-identifier="{{node.module_id}}">
+                <div class="title">{{node.id}}</div>
                 <div plumb-connect class="connect"></div>
-            </div>
-        </div>
-        <div class="modal fade" id="kmeans-settings">
-            <div class="modal-dialog">
-                <div class="v-cell">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title">{{modelNode.id}}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div ng-repeat="field in modelNode.fields">
-                                <div class="row form-group">
-                                    <label class="col-sm-4 control-label">{{field.name}}</label>
-                                    <div class="col-sm-6">
-                                        <input id="{{field.name}}" name="{{field.name}}" type="{{field.type}}" class="form-control" maxlength="12" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancel-kmeans-btn" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button id="save-kmeans-btn" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <p>
             <button type="button" class="btn btn-primary" ng-click="redraw()">Clear</button>
-            <button type="button" class="btn btn-primary" ng-click="open()">Save</button>
+            <button type="button" class="btn btn-primary" ng-click="saveWorkflow()">Save</button>
         </p>
 
         <!--  does not render what comes behind it, so it's probably wrong -->
@@ -88,19 +65,37 @@
 
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
-            <h3 class="modal-title">{{modelNode.title}}</h3>
+            <h3 class="modal-title">{{modelNode.name}}</h3>
         </div>
         <div class="modal-body">
-            
-                <div ng-repeat="field in modelNode.fields">
-                    <div class="row form-group">
-                        <label class="col-sm-4 control-label">{{field.name}}</label>
-                        <div class="col-sm-6">
-                            <input id="{{field.name}}" name="{{field.name}}" ng-model="field.value" type="text" class="form-control" maxlength="12" />
-                        </div>
+            <div ng-repeat="field in modelNode.fields">
+                <div class="row form-group" ng-if="field.widget == 'textfield'">
+                    <label class="col-sm-4 control-label">{{field.title}}</label>
+                    <div class="col-sm-6">
+                        <input id="{{field.name}}" name="{{field.name}}" ng-model="field.value" type="text" class="form-control" maxlength="12" />
                     </div>
                 </div>
-                     
+                <div class="row form-group" ng-if="field.widget == 'dataset'">
+                    <label class="col-sm-4 control-label">{{field.title}}</label>
+                    <div class="col-sm-6">
+                        <select class="multiselect" ng-model="selectedPredictorVariables">
+                            <option value="blue">Blue</option>
+                            <option value="green">Green</option>
+                          <!--  <option ng-repeat="predVariable in field.value" value="predVariable">{{predVariable}}</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group" ng-if="field.widget == 'variables'">
+                    <label class="col-sm-4 control-label">{{field.title}}</label>
+                    <div class="col-sm-6">
+                        <select multiple class="multiselect" ng-model="field.selectedValues">
+                          <option ng-repeat="predVariable in field.value" value={{predVariable}}>{{predVariable}}</option>
+                        </select>
+                    </div>
+                    {{selectedPredictorVariables}}
+                </div>
+            </div>
+
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
@@ -109,4 +104,3 @@
     </script>
 </body>
 </html>
-
