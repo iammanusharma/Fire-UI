@@ -26,9 +26,15 @@
                 "fields": [
                   { "name": "kmeans.num_clusters", "value": "", "widget": "textfield", "title": "Num Clusters" },
                   { "name": "kmeans.max_iter", "value": "", "widget": "textfield", "title": "Max Iter" },
+
+                  {
+                      "name": "kmeans.predictorVariable", "value": ["PV1", "PV2", "PV3"], "widget": "variable", "title": "Target Variable"
+                 , "selectedValues": []
+                  },
                   {
                       "name": "kmeans.predictorvariables", "value": ["col1", "col2", "col3"], "widget": "variables", "title": "Predictor Variables"
-                 , "selectedValues": []}
+                 , "selectedValues": []
+                  }
                 ]
             });
 

@@ -85,6 +85,17 @@
                         </select>
                     </div>
                 </div>
+                <!--   To be fetched by service call -->
+                <div class="row form-group" ng-if="field.widget == 'variable'">
+                    <label class="col-sm-4 control-label">{{field.title}}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" ng-model="field.selectedValues"
+                            ng-options="option for option in field.value track by option">
+                            <!--<option ng-repeat="targetVariable in field.value" value={{targetVariable}}>{{targetVariable}}</option>-->
+                        </select>
+                    </div>
+                    {{selectedPredictorVariables}}
+                </div>
                 <div class="row form-group" ng-if="field.widget == 'variables'">
                     <label class="col-sm-4 control-label">{{field.title}}</label>
                     <div class="col-sm-6">
@@ -92,7 +103,6 @@
                           <option ng-repeat="predVariable in field.value" value={{predVariable}}>{{predVariable}}</option>
                         </select>
                     </div>
-                    {{selectedPredictorVariables}}
                 </div>
             </div>
 
